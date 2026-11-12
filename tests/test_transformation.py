@@ -1,4 +1,5 @@
 import pandas as pd
+import pytest
 
 from app.data.transformation import (
     convert_date_column, 
@@ -58,3 +59,18 @@ def test_create_calculated_column_preserves_original():
     )
 
     pd.testing.assert_frame_equal(df, original_df)
+
+def test_create_calculated_column_unsupported_operation():
+    df = create_test_dataframe()
+
+    with pytest.raises(
+        ValueError,
+        match="Unsupported operation: invalid"
+    ):
+        create_calculated_column(
+            df,
+            "total",
+            "quantity",
+            "unit_price",
+            operation="invalid"
+        )
